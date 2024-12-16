@@ -33,7 +33,7 @@ let loadedHits = 0;
 searchForm.addEventListener("submit", hendlerSearch);
 
 
-function hendlerSearch(event) {
+async function hendlerSearch(event) {
     event.preventDefault();
    
     searchQuery = input.value.trim();
@@ -54,15 +54,14 @@ function hendlerSearch(event) {
     loadedHits = 0; 
     loadMoreButton.classList.add('load-more-hidden');
 
-     
+
+    try {
+        const { hits, totalHits: total } = await serviceImages(searchQuery, page);
+        totalHits = total;
+        loadedHits = hits.length;
 
 
-    serviceImages(searchQuery,page)
-     .then(({ hits, totalHits: total }) => {
-         totalHits = total; 
-         loadedHits = hits.length;
-
-            if (hits.length === 0) {
+         if (hits.length === 0) {
                 iziToast.error({
                     title: 'Error',
                     message: 'Sorry, there are no images matching your search query. Please try again!',
@@ -79,17 +78,17 @@ function hendlerSearch(event) {
                     message: "We're sorry, but you've reached the end of search results.",
                 });
             }
-        })
-        .catch(error => {
+        }
+        catch(error) {
             iziToast.error({
                 title: 'Error',
                 message: 'Something went wrong. Please try again later.',
             });
             console.error(error);
-        })
-        .finally(() => {
+        }
+        finally {
             hideLoader(); 
-        });
+        };
 }
 
 loadMoreButton.addEventListener("click", onLoadMore);

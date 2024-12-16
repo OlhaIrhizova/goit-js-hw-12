@@ -21,8 +21,8 @@ export async function serviceImages(searchQuery, page = 1) {
         const { data } = await axios(BASE_URL, {params});
         return { hits: data.hits, totalHits: data.totalHits };
     }catch(error) {
-        console.error("Error fetching images:", error)
-        return { hits: [], totalHits: 0 }; 
+       
+        return { hits: [], totalHits: 0 };
     }
 
 };
